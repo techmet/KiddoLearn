@@ -12,6 +12,7 @@ import {
 import { Home } from "./components/Home";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { AppScreens } from "./components/AppScreens";
+import * as Updates from 'expo-updates';
 // Define the config
 const config = {
   useSystemColorMode: false,

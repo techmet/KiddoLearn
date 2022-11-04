@@ -88,6 +88,7 @@ export const MatchNumbers = () => {
                 borderRadius="2xl"
                 _text={{
                   color: "violet.900",
+                  fontSize:"xl"
                 }}
                 width="16"
                 onPress={() => {
@@ -104,52 +105,54 @@ export const MatchNumbers = () => {
           </VStack>
         )}
       </Center>
-      <VStack
-        flexDirection="row"
-        justifyContent="space-evenly"
-        flexWrap="wrap"
-        mt="21"
-      >
-        {numbersArr.map((number) => (
-          <Pressable
-            key={number}
-            onPress={() => {
-              if (number === currentNumber) {
-                if (remainingQuestions === 1) {
-                  Speech.speak(
-                    "Welldone Srimayi, you have completed exercise!"
-                  );
-                  setRemaining(0);
+      {remainingQuestions > 0 && (
+        <VStack
+          flexDirection="row"
+          justifyContent="space-evenly"
+          flexWrap="wrap"
+          mt="21"
+        >
+          {numbersArr.map((number) => (
+            <Pressable
+              key={number}
+              onPress={() => {
+                if (number === currentNumber) {
+                  if (remainingQuestions === 1) {
+                    Speech.speak(
+                      "Welldone Srimayi, you have completed exercise!"
+                    );
+                    setRemaining(0);
+                  } else {
+                    Speech.speak("Excellent");
+                    setTimeout(() => {
+                      getRandomNumber(numberRange);
+                    }, 100);
+                    setRemaining(remainingQuestions - 1);
+                  }
                 } else {
-                  Speech.speak("Excellent");
-                  setTimeout(() => {
-                    getRandomNumber(numberRange);
-                  }, 100);
-                  setRemaining(remainingQuestions - 1);
+                  Speech.speak("Hmm, Try Again");
                 }
-              } else {
-                Speech.speak("Hmm, Try Again");
-              }
-            }}
-          >
-            <Box
-              w="20"
-              h="20"
-              m="10"
-              borderStyle="solid"
-              borderWidth="3"
-              borderRadius="10"
-              alignItems="center"
-              justifyContent="center"
-              borderColor="purple.400"
+              }}
             >
-              <Text fontSize="2xl" color="violet.900">
-                {number}
-              </Text>
-            </Box>
-          </Pressable>
-        ))}
-      </VStack>
+              <Box
+                w="20"
+                h="20"
+                m="10"
+                borderStyle="solid"
+                borderWidth="3"
+                borderRadius="10"
+                alignItems="center"
+                justifyContent="center"
+                borderColor="purple.400"
+              >
+                <Text fontSize="2xl" color="violet.900">
+                  {number}
+                </Text>
+              </Box>
+            </Pressable>
+          ))}
+        </VStack>
+      )}
     </>
   );
 };
