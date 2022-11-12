@@ -4,6 +4,7 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { Home } from "./Home";
 import { Numbers } from "./Numbers/Index";
 import { MatchNumbers } from "./Numbers/MatchNumber";
+import { Comparisions } from "./Numbers/Comparisions";
 export const linking = {
   prefixes: [],
   config: {
@@ -39,6 +40,14 @@ const NumbersScreens = () => (
       component={MatchNumbers}
       options={{
         title: "Choose Number Range",
+        headerShown: false,
+      }}
+    />
+    <NumbersStack.Screen
+      name="Comparisions"
+      component={Comparisions}
+      options={{
+        title: "Choose > <",
         headerShown: false,
       }}
     />

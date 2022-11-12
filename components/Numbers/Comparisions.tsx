@@ -9,23 +9,23 @@ import {
 } from "native-base";
 import React, { useState } from "react";
 import * as Speech from "expo-speech";
-import * as NumToWord from "number-to-words";
-import { capitalizeFirstLetter, pickNumberFromNRandomNumbers } from "../../lib/misc";
+import { generateNRandomNumbers } from "../../lib/misc";
 import { RangeSelection } from "../Utils/RangeSelection";
 
-export const MatchNumbers = () => {
+export const Comparisions = () => {
   const NumberOfQuestions = 25;
   const [numberRange, setNumberRange] = useState<string>();
   const [remainingQuestions, setRemaining] = useState(NumberOfQuestions);
   const [numbersArr, setNumbersArr] = useState<number[]>([]);
-  const [currentNumber, setCurrentNumber] = useState<number | undefined>();
+  const [currentComparision, setCurrentComparision] = useState<string>();
+
+  const Comparisions = [">", "<"];
 
   const getRandomNumber = (numberRange: string) => {
     const [min, max] = numberRange.split("-");
-    const { arr, number } = pickNumberFromNRandomNumbers(Number(min), Number(max), 4);
-    setCurrentNumber(number);
+    const arr = generateNRandomNumbers(Number(min), Number(max), 2);
     setNumbersArr(arr);
-    Speech.speak(NumToWord.toWords(number));
+    setCurrentComparision(arr[0] > arr[1] ? Comparisions[0] : Comparisions[1]);
   };
 
   return (
@@ -42,17 +42,19 @@ export const MatchNumbers = () => {
             getRandomNumber(itemValue);
           }}
         />
-        {currentNumber && (
+        {currentComparision && (
           <VStack mt="21">
-            <Text textAlign="right" fontSize="xl" color="violet.900">
-              <Text color="green.700">
-                {NumberOfQuestions - remainingQuestions}{" "}
-              </Text>
-              / {NumberOfQuestions}
-            </Text>
-            <HStack minW="300" justifyContent="space-evenly" mt="21">
-              <Text fontSize="xl" color="violet.900">
-                {capitalizeFirstLetter(NumToWord.toWords(currentNumber))}
+            <HStack
+              minW="300"
+              justifyContent="flex-end"
+              alignItems="flex-end"
+              mt="21"
+            >
+              <Text mb="2" fontSize="xl" color="violet.900">
+                <Text color="green.700">
+                  {NumberOfQuestions - remainingQuestions}{" "}
+                </Text>
+                / {NumberOfQuestions}
               </Text>
               <Button
                 ml="2"
@@ -65,7 +67,7 @@ export const MatchNumbers = () => {
                 width="16"
                 onPress={() => {
                   if (remainingQuestions !== 0) {
-                    Speech.speak(NumToWord.toWords(currentNumber));
+                    Speech.speak(currentComparision?.toString() || "");
                   } else {
                     setRemaining(NumberOfQuestions);
                   }
@@ -74,6 +76,9 @@ export const MatchNumbers = () => {
                 🔄{remainingQuestions === 0 && "Reset"}
               </Button>
             </HStack>
+            <Text mt="2" fontSize="4xl" textAlign="center" color="violet.900">
+              {numbersArr[0]} ___ {numbersArr[1]}
+            </Text>
           </VStack>
         )}
       </Center>
@@ -84,11 +89,11 @@ export const MatchNumbers = () => {
           flexWrap="wrap"
           mt="21"
         >
-          {numbersArr.map((number) => (
+          {Comparisions.map((comparision) => (
             <Pressable
-              key={number}
+              key={comparision}
               onPress={() => {
-                if (number === currentNumber) {
+                if (comparision === currentComparision) {
                   if (remainingQuestions === 1) {
                     Speech.speak(
                       "Welldone Srimayi, you have completed exercise!"
@@ -117,8 +122,8 @@ export const MatchNumbers = () => {
                 justifyContent="center"
                 borderColor="purple.400"
               >
-                <Text fontSize="2xl" color="violet.900">
-                  {number}
+                <Text fontSize="5xl" fontWeight="700" color="violet.900">
+                  {comparision}
                 </Text>
               </Box>
             </Pressable>
