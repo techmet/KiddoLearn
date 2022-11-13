@@ -7,6 +7,7 @@ import {
   VStack,
   HStack,
 } from "native-base";
+import * as NumToWord from "number-to-words";
 import React, { useState } from "react";
 import * as Speech from "expo-speech";
 import { generateNRandomNumbers } from "../../lib/misc";
@@ -21,11 +22,15 @@ export const Comparisions = () => {
 
   const Comparisions = [">", "<"];
 
+  const textToSpeech = (arr: number[])=>{
+    Speech.speak(`${NumToWord.toWords(arr[0])} is dash than ${NumToWord.toWords(arr[1])}`);
+  }
   const getRandomNumber = (numberRange: string) => {
     const [min, max] = numberRange.split("-");
     const arr = generateNRandomNumbers(Number(min), Number(max), 2);
     setNumbersArr(arr);
     setCurrentComparision(arr[0] > arr[1] ? Comparisions[0] : Comparisions[1]);
+    textToSpeech(arr);
   };
 
   return (
@@ -67,7 +72,7 @@ export const Comparisions = () => {
                 width="16"
                 onPress={() => {
                   if (remainingQuestions !== 0) {
-                    Speech.speak(currentComparision?.toString() || "");
+                    textToSpeech(numbersArr);
                   } else {
                     setRemaining(NumberOfQuestions);
                   }
@@ -76,8 +81,9 @@ export const Comparisions = () => {
                 🔄{remainingQuestions === 0 && "Reset"}
               </Button>
             </HStack>
-            <Text mt="2" fontSize="4xl" textAlign="center" color="violet.900">
-              {numbersArr[0]} ___ {numbersArr[1]}
+            <Text mt="4" fontSize="6xl" textAlign="center" color="violet.900">
+              {numbersArr[0]}{" ___ "}
+              {numbersArr[1]}
             </Text>
           </VStack>
         )}
